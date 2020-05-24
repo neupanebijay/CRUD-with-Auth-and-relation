@@ -92,7 +92,7 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        //
+        return view('blogs.edit',compact('blog'));
     }
 
     /**
@@ -115,6 +115,8 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        //
+        $blog->delete();
+        return redirect(route('blogs.index'))->with('status', 'Record Deleted');
+
     }
 }
