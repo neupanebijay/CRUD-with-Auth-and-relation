@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Blog Create</div>
+                <div class="card-header">Edit Blog </div>
 
                 <div class="card-body">
                 @if ($errors->any())
@@ -25,8 +25,9 @@
                     @endif
                  
 
-                    <form action="{{route('blogs.update')}}" method="post" enctype="multipart/form-data">
+                    <form action="{{route('blogs.update',$blog->id)}}" method="post" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                         <p>
                         <label for="title">Title</label>
                         <input type="text" class="form-control" name="title" id="title" value="{{$blog->title}}">
@@ -38,10 +39,10 @@
                          <p>
 
                         <label for="">Upload Image</label><br>
-                        <input type="file"  name="image" id="" value="{{images($blog->image)}}">                
+                        <input type="file"  name="image" id="" value="{{$blog->image}}">                
                          </p> 
                         
-                         <input type="submit" value="Add" class="btn btn-secondary">
+                         <input type="submit" value="Update" class="btn btn-secondary">
                     
                     </form>
                 </div>
