@@ -39,7 +39,8 @@
                          <p>
 
                         <label for="">Upload Image</label><br>
-                        <input type="file"  name="image" id="" value="{{$blog->image}}">                
+                        <input type="file"  name="image" id="">    
+                        <img src="/images/{{ $blog->image }}" class="img-fluid">             
                          </p> 
                         
                          <input type="submit" value="Update" class="btn btn-secondary">

@@ -20,5 +20,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
+Route::get('/blogs/myblogs','BlogController@ownBlogs');
 Route::resource('/blogs','BlogController');
+Route::resource('/categories','CategoryController');
+

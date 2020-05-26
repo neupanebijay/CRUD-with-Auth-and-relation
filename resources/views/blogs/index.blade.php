@@ -21,6 +21,7 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>Title</th>
+                                    <th>Category</th>
                                     <th>Created By </th>
                                     <th>Created on</th>
                                 </tr>
@@ -32,6 +33,8 @@
                                 <tr>
                                     <td>{{$blog->id}}</td>
                                     <td><a href="{{route('blogs.show', $blog->id)}}">{{$blog->title}}</a></td>
+                                    {{--this category name is from Blog model with CategoryNameAttribute--}}
+                                    <td>{{$blog->category_name}}</td>
                                     {{-- <td>{{$blog->user_id}}</td> --}}
                                     {{-- <td>{{App\User::find($blog->user_id)->name}}</td> --}}
                                     <td>{{$blog->user->name}}</td>

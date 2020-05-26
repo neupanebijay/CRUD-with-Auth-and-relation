@@ -18,6 +18,10 @@ class CreateBlogsTable extends Migration
             $table->string('title');
             $table->text('decription');
             $table->string('image');
+            /**
+             * if you want your form to take value or null value than you can do the following and dont do required in form validation
+             */
+            $table->string('image')->nullable;
             $table->bigInteger('user_id');
             $table->timestamps();
         });

@@ -31,6 +31,13 @@
                         <label for="title">Title</label>
                         <input type="text" class="form-control" name="title" id="title">
                         </p>
+                        <label for="">Category</label>
+                        <select name="category_id" id="">
+                        @foreach(App\Category::all() as $category)
+
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                        </select>
                         <p>
                         <label for="desc">Description</label>
                         <textarea name="description" class="form-control" id="desc" cols="30" rows="10"></textarea>

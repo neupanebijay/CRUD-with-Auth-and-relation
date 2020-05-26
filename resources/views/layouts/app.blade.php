@@ -21,7 +21,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light" style="background-color: #e3f2fd; shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -50,7 +50,15 @@
                             @endif
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="/blogs">Blogs</a>
+                            {{--SPan is to create badge with notification--}}
+                                <a class="nav-link" href="/blogs">Blogs<span class="badge badge-secondary">( {{App\Blog::get()->count()}} )</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/categories">Categories</a>
+                            </li>
+                            <li class="nav-item">
+                            {{-- this is to count no of blogs and show like a notification --}}
+                                <a class="nav-link" href="/blogs/myblogs">My Blogs<span class="badge badge-success">( {{App\Blog::where('user_id',Auth::user()->id)->count()}} )</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/blogs/create">Create Blog</a>

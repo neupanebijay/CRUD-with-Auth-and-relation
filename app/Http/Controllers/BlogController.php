@@ -13,7 +13,7 @@ class BlogController extends Controller
     {
         // $this->middleware('auth');
         // $this->middleware('auth')->except(['index','create']);
-        $this->middleware('auth')->only(['index','show']);
+        $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -26,9 +26,12 @@ class BlogController extends Controller
     /**
      * when Blog::all() is done it gives n+1 problems though it producs 100% correct result so use the following
      * blog uses user id and therefore access all info of user
+     * BLog has relation with user as relation "user" and with category "category"
      */
-        $blogs = Blog::with('user')->get();
+    //  latest()->get() keeps data in desc order  
+     $blogs = Blog::with('user','category')->get();
         
+       
 
        return view('blogs.index')->with('blogs',$blogs);
     }
@@ -53,6 +56,7 @@ class BlogController extends Controller
     {
         $request->validate([
             'title' => 'required | min:5',
+            'category_id' =>'required',
             'description' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
@@ -63,14 +67,38 @@ class BlogController extends Controller
             
           
              
-        $blog                = new Blog;
-        $blog->title         = $request->title;
-        $blog->description   = $request->description;
+        $blog                   = new Blog();
+        $blog->title            = $request->title;
+        $blog->category_id      = $request->category_id;
+        $blog->description      = $request->description;
         
-        $blog->image         = $imageName ;
-        $blog->user_id      = Auth::user()->id;
+        $blog->image            = $imageName ;
+        $blog->user_id          = Auth::user()->id;
         $blog->save();
         return redirect(route('blogs.create'))->with('status', 'Record added');
+
+            // use mass assignemnt for all the following tchniques except the above.
+        /**
+         * instead of the above eloquent data we can use database as well but we need to define in model as well
+         */
+
+        // Blog::create([
+        //     'title' => $request->title,
+        //     'description' => $request->description,       
+        //      'image'         = $imageName ;
+        //     'user_id'      = Auth::user()->id;
+
+            /**
+             * blogs below is a relation name
+             */
+    // Auth::user()->blogs()->create([
+    //     'title' => $request->title,
+    //         'description' => $request->description,     
+    //         'category_id'  => $request->category_id,
+
+    //          'image'         => $imageName,
+    //         'user_id'      => Auth::user()->id,
+    //     ]);
     }
 
     /**
@@ -107,19 +135,22 @@ class BlogController extends Controller
         $request->validate([
             'title' => 'required | min:5',
             'description' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
 
-            $imageName = time().'.'.$request->image->getClientOriginalExtension();
-            $request->image->move(public_path('images'), $imageName);
             
+            if ($request->hasFile('image')) {
+                $imageName = time().'.'.$request->image->getClientOriginalExtension();
+                $request->image->move(public_path('images'), $imageName);
+                $blog->image         = $imageName ;
+            }
           
              
         $blog->title         = $request->title;
         $blog->description   = $request->description;
         
-        $blog->image         = $imageName ;
+        
         $blog->user_id      = Auth::user()->id;
         $blog->save();
         return redirect(route('blogs.index'))->with('status', 'Record updated');
@@ -133,8 +164,24 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        $blog->delete();
-        return redirect(route('blogs.index'))->with('status', 'Record Deleted');
+        if($blog->user->id == Auth::user()->id){
+           
+            unlink( public_path('/images/'.$blog->image));
+            $blog->delete();
+
+            return redirect(route('blogs.index'))->with('status', 'Record Deleted');
+        }
+        
+        return redirect(route('blogs.index'))->with('status', 'Delete yours blog only, You are not permitted to delete others blog');
+         
+    }
+
+    public function ownBlogs()
+    {
+        // means blog user id is user with logged in. blog ma vako user id vaneko login gareko user_id ho 
+        $blogs = Blog::where('user_id', Auth::user()->id)->get();
+        return view('blogs.index')->with('blogs',$blogs);
+
 
     }
 }

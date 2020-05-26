@@ -12,7 +12,7 @@
                       {!! $blog->description !!}  <br>
                      <img src="/images/{{$blog->image}}" alt="" class="img-fluid"> 
                      <hr>
-                      Posted by: {{$blog->user->name}} {{$blog->created_at->diffForHumans()}}<br>
+                     {{$blog->meta_data}}<br>
 
                         <div class="btn-group">
                             <form onsubmit="return confirm('Are you sure??')" action="{{route('blogs.destroy',$blog->id)}}" method="post">
